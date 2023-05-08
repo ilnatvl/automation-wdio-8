@@ -1,6 +1,7 @@
 node_modules
 automation-wdio-8.iml
 .idea
+.vscode
 .tmp
 screenshots
 reports
