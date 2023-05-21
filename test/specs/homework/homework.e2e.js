@@ -25,6 +25,10 @@ describe('Registration page', async () => {
         const submitButton = $('button.btn.btn-primary');
         await submitButton.click();
 
+        const usernameMenu = $('.navbar-right .dropdown-toggle');
+        await expect(usernameMenu).toBeDisplayed();
+        await expect(usernameMenu).toHaveText(nameAndSurnameText); 
+
     });
 
 
@@ -32,6 +36,8 @@ describe('Registration page', async () => {
         const nameAndSurnameText = 'Karkulka Cervena'
         const emailText = 'karkulka.cervena@tester.cz'
         const passwordText = 'Nikomunereknu123'
+        const errorText = 'Účet s tímto emailem již existuje'
+
 
         const baseUrl = 'https://team8-2022brno.herokuapp.com/registrace';
 
@@ -53,18 +59,18 @@ describe('Registration page', async () => {
         const submitButton = $('button.btn.btn-primary');
         await submitButton.click();
 
-        const registrationErrors = await $$('span.invalid-feedback');
-        for (const row of registrationErrors) {
-            console.log('Registration error: ' + await row.getText());
-        }
+        const registrationError = await $('span.invalid-feedback');
+        await expect(registrationError).toBeDisplayed();
+        await expect(registrationError).toHaveText(errorText);
 
     });
 
     it('should not allow registration with invalid password', async () => {
 
-        const nameAndSurnameText = 'Karkulka Cervena'
-        const emailText = 'karkulka.cervena@tester.cz'
+        const nameAndSurnameText = 'Sedy Vlk'
+        const emailText = 'sedy.vlk@tester.cz'
         const passwordText = 'Nikomunereknu'
+        const errorText = 'Heslo musí obsahovat minimálně 6 znaků, velké i malé písmeno a číslici'
 
         const baseUrl = 'https://team8-2022brno.herokuapp.com/registrace';
 
@@ -86,11 +92,9 @@ describe('Registration page', async () => {
         const submitButton = $('button.btn.btn-primary');
         await submitButton.click();
 
-        const registrationErrors = await $$('span.invalid-feedback');
-        for (const row of registrationErrors) {
-            console.log('Registration error: ' + await row.getText());
-        }
-
+        const registrationError = await $('span.invalid-feedback');
+        await expect(registrationError).toBeDisplayed();
+        await expect(registrationError).toHaveText(errorText);
 
     });
 
