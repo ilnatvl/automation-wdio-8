@@ -1,5 +1,8 @@
-class RegistrationPage {
+import AppPage from './app.page.js';
+
+class RegistrationPage extends AppPage {
     constructor() {
+        super();
         this.url = '/registrace';
     }
 
@@ -10,11 +13,6 @@ class RegistrationPage {
     get nameAndSurnameField() { return $('#name');}
     get registrationError() { return $('span.invalid-feedback');}
     get userNameMenu() { return $('.navbar-right .dropdown-toggle');}
-
-    async open() {
-        await browser.reloadSession();
-        await browser.url(this.url);
-    }  
 
     async setName(nameAndSurnameText) {
         await this.nameAndSurnameField.setValue(nameAndSurnameText);
@@ -28,6 +26,13 @@ class RegistrationPage {
     
     async setEmail(emailText) {
         await this.emailField.setValue(emailText);}
+
+    async registerNewUser(nameAndSurnameText, emailText, passwordText) {
+        await this.setName(nameAndSurnameText);
+        await this.setEmail(emailText);
+        await this.setPassword(passwordText);
+        await this.submitForm();
+    }
 }
 
 export default new RegistrationPage();
