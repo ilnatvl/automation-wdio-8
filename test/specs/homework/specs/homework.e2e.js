@@ -50,11 +50,17 @@ describe('Registration page', async () => {
         const emailText = 'sedy.vlk@tester.cz';
         const passwordText = '12345678';
         const errorText = 'Heslo musí obsahovat minimálně 6 znaků, velké i malé písmeno a číslici';
+        const noUserErrorText = 'Tyto přihlašovací údaje neodpovídají žadnému záznamu.'
 
         await RegistrationPage.registerNewUser(fullNameText, emailText, passwordText);
 
         await expect(await RegistrationPage.fieldError).toBeDisplayed();
         await expect(await RegistrationPage.fieldError).toHaveText(errorText);
+
+        await LoginPage.open();
+        await LoginPage.login(emailText, passwordText);
+        await expect(await LoginPage.fieldError).toBeDisplayed();
+        await expect(await LoginPage.fieldError).toHaveText(noUserErrorText);
 
     });
 
