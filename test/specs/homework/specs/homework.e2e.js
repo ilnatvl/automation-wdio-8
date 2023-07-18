@@ -19,12 +19,13 @@ describe('Registration page', async () => {
 
         await expect(await RegistrationPage.userNameDropdown).toBeDisplayed();
         await expect(await RegistrationPage.getCurrentUser()).toEqual(shortFullNameText);
+        await expect(await RegistrationPage.getCurrentUserFullName()).toEqual(fullNameText);
 
         await LoginPage.open();
         await LoginPage.login(emailText, passwordText);
         await expect(await LoginPage.userNameDropdown).toBeDisplayed();
         await expect(await LoginPage.getCurrentUser()).toEqual(shortFullNameText);
-
+        await expect(await LoginPage.getCurrentUserFullName()).toEqual(fullNameText);
     });
 
     it('should not allow to register the existing user', async () => {

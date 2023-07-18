@@ -29,6 +29,10 @@ class AppPage {
         return await this.userNameDropdown.$('strong').getText();
     }
 
+    async getCurrentUserFullName() {
+        return await this.userNameDropdown.getAttribute('title');
+    }
+
 }
 
 export default AppPage;
