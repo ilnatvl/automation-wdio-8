@@ -1,5 +1,6 @@
 import RegistrationPage from '../pages/registration.page.js';
-import {defaultPassword, defaultUserFullName, getRandomUserEmail} from '../fixtures.js'
+import LoginPage from '../pages/login.page.js';
+import { defaultPassword, getRandomUser, shortenFullName } from '../fixtures.js'
 
 describe('Registration page', async () => {
 
@@ -7,49 +8,53 @@ describe('Registration page', async () => {
         await RegistrationPage.open();
     });
 
-    it('should register a new user', async () => {
-        const nameAndSurnameText = defaultUserFullName;
-        const emailText = getRandomUserEmail();
+    it('should allow registration of a new user', async () => {
+        const randomUser = getRandomUser();
+        const fullNameText = randomUser.fullName;
+        const shortFullNameText = shortenFullName(fullNameText);
+        const emailText = randomUser.email;
         const passwordText = defaultPassword;
 
-        await RegistrationPage.registerNewUser(nameAndSurnameText, emailText, passwordText);
+        await RegistrationPage.registerNewUser(fullNameText, emailText, passwordText);
 
-        await expect(await RegistrationPage.userNameMenu).toBeDisplayed();
-        await expect(await RegistrationPage.userNameMenu).toHaveText(nameAndSurnameText);
+        await expect(await RegistrationPage.userNameDropdown).toBeDisplayed();
+        await expect(await RegistrationPage.getCurrentUser()).toEqual(shortFullNameText);
+
+        await LoginPage.open();
+        await LoginPage.login(emailText, passwordText);
+        await expect(await LoginPage.userNameDropdown).toBeDisplayed();
+        await expect(await LoginPage.getCurrentUser()).toEqual(shortFullNameText);
 
     });
 
-    it('should not allow to register an existing user', async () => {
-        const nameAndSurnameText = defaultUserFullName;
-        const emailText = getRandomUserEmail();
+    it('should not allow to register the existing user', async () => {
+        const randomUser = getRandomUser();
+        const fullNameText = randomUser.fullName;
+        const emailText = randomUser.email;
         const passwordText = defaultPassword;
         const errorText = 'Účet s tímto emailem již existuje';
 
-        await RegistrationPage.registerNewUser(nameAndSurnameText, emailText, passwordText);
+        await RegistrationPage.registerNewUser(fullNameText, emailText, passwordText);
         await RegistrationPage.open();
-        await RegistrationPage.registerNewUser(nameAndSurnameText, emailText, passwordText);
+        await RegistrationPage.registerNewUser(fullNameText, emailText, passwordText);
 
-        await expect(await RegistrationPage.registrationError).toBeDisplayed();
-        await expect(await RegistrationPage.registrationError).toHaveText(errorText);
+        await expect(await RegistrationPage.fieldError).toBeDisplayed();
+        await expect(await RegistrationPage.fieldError).toHaveText(errorText);
 
     });
 
     it('should not allow registration with invalid password', async () => {
 
-        const nameAndSurnameText = 'Sedy Vlk';
+        const fullNameText = 'Sedy Vlk';
         const emailText = 'sedy.vlk@tester.cz';
         const passwordText = '12345678';
         const errorText = 'Heslo musí obsahovat minimálně 6 znaků, velké i malé písmeno a číslici';
 
-        await RegistrationPage.registerNewUser(nameAndSurnameText, emailText, passwordText);
+        await RegistrationPage.registerNewUser(fullNameText, emailText, passwordText);
 
-        await expect(await RegistrationPage.registrationError).toBeDisplayed();
-        await expect(await RegistrationPage.registrationError).toHaveText(errorText);
+        await expect(await RegistrationPage.fieldError).toBeDisplayed();
+        await expect(await RegistrationPage.fieldError).toHaveText(errorText);
 
     });
 
 });
-
-
-
-
